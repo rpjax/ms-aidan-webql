@@ -4,7 +4,7 @@ using Webql.Core.Helpers;
 
 namespace Webql.Semantics.Analysis;
 
-public static class SemanticsTypeHelper
+public static class TypeHelper
 {
     public static Type NormalizeNullableType(Type type)
     {

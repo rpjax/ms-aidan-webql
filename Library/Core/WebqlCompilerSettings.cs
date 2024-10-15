@@ -25,18 +25,26 @@ public class WebqlCompilerSettings
     public ISyntaxTreeVisitor[] PostValidationVisitors { get; }
 
     /// <summary>
+    /// Gets a value indicating whether to use async queryables.
+    /// </summary>
+    public bool UseAsyncQueryable { get; }
+
+    /// <summary>
     /// Initializes a new instance of the <see cref="WebqlCompilerSettings"/> class.
     /// </summary>
     /// <param name="linqProvider">The WebqlLinqProvider to use for compiling WebQL queries.</param>
     /// <param name="preValidationVisitors">The array of pre-validation syntax tree visitors.</param>
     /// <param name="postValidationVisitors">The array of post-validation syntax tree visitors.</param>
+    /// <param name="useAsyncQueryable">A value indicating whether to use async queryables.</param>
     public WebqlCompilerSettings(
         IWebqlLinqProvider? linqProvider = null,
         ISyntaxTreeVisitor[]? preValidationVisitors = null,
-        ISyntaxTreeVisitor[]? postValidationVisitors = null)
+        ISyntaxTreeVisitor[]? postValidationVisitors = null,
+        bool useAsyncQueryable = false)
     {
         LinqProvider = linqProvider ?? new WebqlLinqProvider();
         PreValidationVisitors = preValidationVisitors ?? Array.Empty<ISyntaxTreeVisitor>();
         PostValidationVisitors = postValidationVisitors ?? Array.Empty<ISyntaxTreeVisitor>();
+        UseAsyncQueryable = useAsyncQueryable;
     }
 }

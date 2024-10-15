@@ -25,8 +25,16 @@ public class WebqlLinqProvider : IWebqlLinqProvider
      * Type providers
      */
 
-    public Type GetQueryableType(WebqlSyntaxNode node)
+    public virtual Type GetQueryableType(WebqlSyntaxNode node)
     {
+        var compilationContext = node.GetCompilationContext();
+        var useAsyncQueryable = compilationContext.Settings.UseAsyncQueryable;
+
+        if (useAsyncQueryable && node.IsInRootScope())
+        {
+            return typeof(IAsyncQueryable<>);
+        }
+
         return typeof(IQueryable<>);
     }
 
@@ -161,7 +169,26 @@ public class WebqlLinqProvider : IWebqlLinqProvider
     {
         var sourceType = source.GetExpressionType();
         var elementType = sourceType.GetQueryableElementType();
-        throw new NotImplementedException();
+
+        if (sourceType.IsAsyncQueryable())
+        {
+            return typeof(AsyncQueryableExtensions)
+                .GetMethods()
+                .Where(m => m.Name == "CountAsync")
+                .First()
+                .MakeGenericMethod(elementType)
+                ;
+        }
+        else
+        {
+            return typeof(Queryable)
+                .GetMethods()
+                .First(m => m.Name == "Count" &&
+                    m.IsGenericMethodDefinition &&
+                    m.GetParameters().Length == 1 &&
+                    m.GetParameters()[0].ParameterType.GetGenericTypeDefinition() == typeof(IQueryable<>))
+                .MakeGenericMethod(elementType);
+        }
     }
 
     public MethodInfo GetContainsMethodInfo(WebqlExpression source)
@@ -169,45 +196,208 @@ public class WebqlLinqProvider : IWebqlLinqProvider
         var sourceType = source.GetExpressionType();
         var elementType = sourceType.GetQueryableElementType();
 
-        return typeof(Enumerable).GetMethods()
-            .Where(x => x.Name == "Contains")
-            .Where(x => x.GetParameters().Length == 2)
-            .First()
-            .MakeGenericMethod(elementType);
+        return typeof(Enumerable)
+                .GetMethods()
+                .Where(m => m.Name == "Contains")
+                .Where(m => m.GetParameters().Length == 2)
+                .First()
+                .MakeGenericMethod(elementType);
+
+        if (sourceType.IsAsyncQueryable())
+        {
+            return typeof(AsyncQueryableExtensions)
+                .GetMethods()
+                .Where(m => m.Name == "ContainsAsync")
+                .First()
+                .MakeGenericMethod(elementType);
+        }
+        else
+        {
+            return typeof(Enumerable)
+                .GetMethods()
+                .Where(m => m.Name == "Contains")
+                .Where(m => m.GetParameters().Length == 2)
+                .First()
+                .MakeGenericMethod(elementType);
+        }
     }
 
     public MethodInfo GetIndexMethodInfo(WebqlExpression source)
     {
-        throw new NotImplementedException();
+        var sourceType = source.GetExpressionType();
+        var elementType = sourceType.GetQueryableElementType();
+
+        return typeof(Queryable)
+                .GetMethods()
+                .Where(m => m.Name == "ElementAt")
+                .First()
+                .MakeGenericMethod(elementType);
+
+        if (sourceType.IsAsyncQueryable())
+        {
+            return typeof(AsyncQueryableExtensions)
+                .GetMethods()
+                .Where(m => m.Name == "ElementAtAsync")
+                .First()
+                .MakeGenericMethod(elementType);
+        }
+        else
+        {
+            return typeof(Queryable)
+                .GetMethods()
+                .Where(m => m.Name == "ElementAt")
+                .First()
+                .MakeGenericMethod(elementType);
+        }
     }
 
     public MethodInfo GetAnyMethodInfo(WebqlExpression source)
     {
-        throw new NotImplementedException();
+        var sourceType = source.GetExpressionType();
+        var elementType = sourceType.GetQueryableElementType();
+
+        return typeof(Queryable)
+                .GetMethods()
+                .Where(m => m.Name == "Any")
+                .First()
+                .MakeGenericMethod(elementType);
+
+        if (sourceType.IsAsyncQueryable())
+        {
+            return typeof(AsyncQueryableExtensions)
+                .GetMethods()
+                .Where(m => m.Name == "AnyAsync")
+                .First()
+                .MakeGenericMethod(elementType);
+        }
+        else
+        {
+            return typeof(Queryable)
+                .GetMethods()
+                .Where(m => m.Name == "Any")
+                .First()
+                .MakeGenericMethod(elementType);
+        }
     }
 
     public MethodInfo GetAllMethodInfo(WebqlExpression source)
     {
-        throw new NotImplementedException();
+        var sourceType = source.GetExpressionType();
+        var elementType = sourceType.GetQueryableElementType();
+
+        return typeof(Queryable)
+                .GetMethods()
+                .Where(m => m.Name == "All")
+                .First()
+                .MakeGenericMethod(elementType);
+
+        if (sourceType.IsAsyncQueryable())
+        {
+            return typeof(AsyncQueryableExtensions)
+                .GetMethods()
+                .Where(m => m.Name == "AllAsync")
+                .First()
+                .MakeGenericMethod(elementType);
+        }
+        else
+        {
+            return typeof(Queryable)
+                .GetMethods()
+                .Where(m => m.Name == "All")
+                .First()
+                .MakeGenericMethod(elementType);
+        }
     }
 
     public MethodInfo GetMinMethodInfo(WebqlExpression source)
     {
-        throw new NotImplementedException();
+        var sourceType = source.GetExpressionType();
+        var elementType = sourceType.GetQueryableElementType();
+
+        if (sourceType.IsAsyncQueryable())
+        {
+            return typeof(AsyncQueryableExtensions)
+                .GetMethods()
+                .Where(m => m.Name == "MinAsync")
+                .First()
+                .MakeGenericMethod(elementType);
+        }
+        else
+        {
+            return typeof(Queryable)
+                .GetMethods()
+                .Where(m => m.Name == "Min")
+                .First()
+                .MakeGenericMethod(elementType);
+        }
     }
 
     public MethodInfo GetMaxMethodInfo(WebqlExpression source)
     {
-        throw new NotImplementedException();
+        var sourceType = source.GetExpressionType();
+        var elementType = sourceType.GetQueryableElementType();
+
+        if (sourceType.IsAsyncQueryable())
+        {
+            return typeof(AsyncQueryableExtensions)
+                .GetMethods()
+                .Where(m => m.Name == "MaxAsync")
+                .First()
+                .MakeGenericMethod(elementType);
+        }
+        else
+        {
+            return typeof(Queryable)
+                .GetMethods()
+                .Where(m => m.Name == "Max")
+                .First()
+                .MakeGenericMethod(elementType);
+        }
     }
 
     public MethodInfo GetSumMethodInfo(WebqlExpression source)
     {
-        throw new NotImplementedException();
+        var sourceType = source.GetExpressionType();
+        var elementType = sourceType.GetQueryableElementType();
+
+        if (sourceType.IsAsyncQueryable())
+        {
+            return typeof(AsyncQueryableExtensions)
+                .GetMethods()
+                .Where(m => m.Name == "SumAsync")
+                .First()
+                .MakeGenericMethod(elementType);
+        }
+        else
+        {
+            return typeof(Queryable)
+                .GetMethods()
+                .Where(m => m.Name == "Sum")
+                .First()
+                .MakeGenericMethod(elementType);
+        }
     }
 
     public MethodInfo GetAverageMethodInfo(WebqlExpression source)
     {
-        throw new NotImplementedException();
+        var sourceType = source.GetExpressionType();
+        var elementType = sourceType.GetQueryableElementType();
+
+        if (sourceType.IsAsyncQueryable())
+        {
+            return typeof(AsyncQueryableExtensions)
+                .GetMethods()
+                .Where(m => m.Name == "AverageAsync")
+                .First()
+                .MakeGenericMethod(elementType);
+        }
+        else
+        {
+            return typeof(Queryable)
+                .GetMethods()
+                .Where(m => m.Name == "Average")
+                .First()
+                .MakeGenericMethod(elementType);
+        }
     }
 }

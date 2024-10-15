@@ -7,8 +7,17 @@ using Webql.Translation.Linq.Translators;
 
 namespace Webql.Translation.Linq;
 
+/// <summary>
+/// Provides methods to translate collection manipulation expressions.
+/// </summary>
 public static class CollectionManipulationExpressionTranslator
 {
+    /// <summary>
+    /// Translates a collection manipulation expression.
+    /// </summary>
+    /// <param name="node">The node representing the collection manipulation expression.</param>
+    /// <returns>The translated expression.</returns>
+    /// <exception cref="InvalidOperationException">Thrown when an invalid operator is encountered.</exception>
     public static Expression TranslateCollectionManipulationExpression(WebqlOperationExpression node)
     {
         switch (node.GetCollectionManipulationOperator())
@@ -33,6 +42,11 @@ public static class CollectionManipulationExpressionTranslator
         }
     }
 
+    /// <summary>
+    /// Translates a filter expression.
+    /// </summary>
+    /// <param name="node">The node representing the filter expression.</param>
+    /// <returns>The translated expression.</returns>
     public static Expression TranslateFilterExpression(WebqlOperationExpression node)
     {
         var lhs = node.Operands[0];
@@ -50,6 +64,11 @@ public static class CollectionManipulationExpressionTranslator
         return Expression.Call(methodInfo, lhsExpression, lambdaExpression);
     }
 
+    /// <summary>
+    /// Translates a select expression.
+    /// </summary>
+    /// <param name="node">The node representing the select expression.</param>
+    /// <returns>The translated expression.</returns>
     public static Expression TranslateSelectExpression(WebqlOperationExpression node)
     {
         var lhs = node.Operands[0];
@@ -67,11 +86,21 @@ public static class CollectionManipulationExpressionTranslator
         return Expression.Call(methodInfo, lhsExpression, lambdaExpression);
     }
 
+    /// <summary>
+    /// Translates a select many expression.
+    /// </summary>
+    /// <param name="node">The node representing the select many expression.</param>
+    /// <returns>The translated expression.</returns>
     public static Expression TranslateSelectManyExpression(WebqlOperationExpression node)
     {
         throw new NotImplementedException();
     }
 
+    /// <summary>
+    /// Translates a limit expression.
+    /// </summary>
+    /// <param name="node">The node representing the limit expression.</param>
+    /// <returns>The translated expression.</returns>
     public static Expression TranslateLimitExpression(WebqlOperationExpression node)
     {
         var lhs = node.Operands[0];
@@ -86,6 +115,11 @@ public static class CollectionManipulationExpressionTranslator
         return Expression.Call(methodInfo, lhsExpression, rhsExpression);
     }
 
+    /// <summary>
+    /// Translates a skip expression.
+    /// </summary>
+    /// <param name="node">The node representing the skip expression.</param>
+    /// <returns>The translated expression.</returns>
     public static Expression TranslateSkipExpression(WebqlOperationExpression node)
     {
         var lhs = node.Operands[0];

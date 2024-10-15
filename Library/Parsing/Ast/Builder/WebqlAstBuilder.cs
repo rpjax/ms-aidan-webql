@@ -1,5 +1,4 @@
-﻿using Microsoft.CodeAnalysis;
-using Aidan.TextAnalysis.Parsing.Components;
+﻿using Aidan.TextAnalysis.Parsing.Components;
 using Aidan.TextAnalysis.Parsing.Extensions;
 using Aidan.TextAnalysis.Tokenization;
 using Aidan.TextAnalysis.Tokenization.Extensions;

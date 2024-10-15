@@ -111,7 +111,7 @@ public class TypeValidatorAnalyzer : SyntaxTreeAnalyzer
         var lhsSemantics = expression.Operands[0].GetSemantics<IExpressionSemantics>();
         var rhsSemantics = expression.Operands[1].GetSemantics<IExpressionSemantics>();
 
-        if (!SemanticsTypeHelper.TypesAreCompatible(lhsSemantics.Type, rhsSemantics.Type))
+        if (!TypeHelper.TypesAreCompatible(lhsSemantics.Type, rhsSemantics.Type))
         {
             throw expression.CreateOperatorIncompatibleTypeException(lhsSemantics.Type, rhsSemantics.Type);
         }

@@ -11,14 +11,23 @@ using System.Reflection;
 
 namespace Webql.Semantics.Analysis;
 
+/// <summary>
+/// Provides methods for performing semantic analysis on WebQL syntax nodes.
+/// </summary>
 public static class SemanticAnalyzer
 {
     /*
      * Main API for using the semantic analyzer.
      */
 
-    //*
-    public static void ExecuteSemanticalAnalysis(WebqlCompilationContext context, ref WebqlSyntaxNode node)
+    /// <summary>
+    /// Executes the semantic analysis on the provided syntax node.
+    /// </summary>
+    /// <param name="context">The compilation context.</param>
+    /// <param name="node">The syntax node to analyze.</param>
+    public static void ExecuteSemanticalAnalysis(
+        WebqlCompilationContext context,
+        ref WebqlSyntaxNode node)
     {
         // Performs the initial semantic analysis, which binds semantics to the AST.
         BindSemanticsToAst(context, node);
@@ -29,8 +38,14 @@ public static class SemanticAnalyzer
         ExecutePostValidationRewrites(ref node);
     }
 
-    //*
-    public static void BindSemanticsToAst(WebqlCompilationContext context, WebqlSyntaxNode node)
+    /// <summary>
+    /// Binds semantics to the Abstract Syntax Tree (AST) of the provided syntax node.
+    /// </summary>
+    /// <param name="context">The compilation context.</param>
+    /// <param name="node">The syntax node to bind semantics to.</param>
+    public static void BindSemanticsToAst(
+        WebqlCompilationContext context,
+        WebqlSyntaxNode node)
     {
         node.BindCompilationContext(context);
         BindScopes(node);
@@ -98,6 +113,13 @@ public static class SemanticAnalyzer
      * It is used to perform assertions and transformations on the AST, and to generate the final output.
      */
 
+    /// <summary>
+    /// Creates semantics for the provided syntax node based on its type.
+    /// </summary>
+    /// <param name="context">The compilation context.</param>
+    /// <param name="node">The syntax node for which to create semantics.</param>
+    /// <returns>The created semantics.</returns>
+    /// <exception cref="InvalidOperationException">Thrown when the node type is invalid.</exception>
     public static ISemantics CreateSemantics(
         WebqlCompilationContext context,
         WebqlSyntaxNode node)
@@ -116,8 +138,7 @@ public static class SemanticAnalyzer
             default:
                 throw new InvalidOperationException();
         }
-    }
-
+    }
     /*
      * QUERY SEMANTICS
      */
@@ -233,18 +254,6 @@ public static class SemanticAnalyzer
         var otherOperand = operationNode.Operands.First(x => x != expression);
         var otherSemantics = otherOperand.GetSemantics<IExpressionSemantics>();
 
-        //var type = SemanticsTypeHelper.NormalizeNullableType(otherSemantics.Type);
-        //var nullableType = null as Type;
-
-        //if (otherSemantics.Type.IsValueType)
-        //{
-        //    nullableType = typeof(Nullable<>).MakeGenericType(type);
-        //}
-        //else
-        //{
-        //    nullableType = type; // If it's not a value type, don't attempt to make it nullable
-        //}
-
         return new ExpressionSemantics(
             type: otherSemantics.Type
         );
@@ -311,7 +320,7 @@ public static class SemanticAnalyzer
         var childType = childSemantics.Type;
         var memberName = memberAccessExpression.MemberName;
 
-        var propertyInfo = SemanticsTypeHelper.TryGetPropertyFromType(childType, memberName);
+        var propertyInfo = TypeHelper.TryGetPropertyFromType(childType, memberName);
 
         if (propertyInfo is null)
         {
@@ -459,10 +468,10 @@ public static class SemanticAnalyzer
         WebqlCompilationContext context,
         WebqlOperationExpression operationExpression)
     {
-        if(operationExpression.Operands.Length != 1)
+        if (operationExpression.Operands.Length != 1)
         {
             throw operationExpression.CreateInvalidOperandCountException(
-                expectedCount: 1, 
+                expectedCount: 1,
                 actualCount: operationExpression.Operands.Length
             );
         }
@@ -495,9 +504,10 @@ public static class SemanticAnalyzer
 
         lhs.EnsureIsQueryable();
 
+        var queryableType = lhsType.GetQueryableType();
         var elementType = lhsType.GetQueryableElementType();
 
-        var type = operationExpression.GetQueryableType()
+        var type = queryableType
             .MakeGenericType(elementType);
 
         return new ExpressionSemantics(
@@ -622,7 +632,6 @@ public static class SemanticAnalyzer
         );
 
         var type = TypeCreator.CreateAnonymousType(typeCreaionOptions);
-        var properties = type.GetProperties(BindingFlags.Public | BindingFlags.Instance);
 
         return new AnonymousObjectSemantics(
             type: type
@@ -639,7 +648,7 @@ public static class SemanticAnalyzer
 
         var propertyInfo = parentSemantics.Type.GetProperty(expression.Name);
 
-        if(propertyInfo is null)
+        if (propertyInfo is null)
         {
             throw new SemanticException($"Property '{expression.Name}' not found in the projected type '{parentSemantics.Type.Name}'. Ensure the property name is correctly defined in the projection.", expression);
         }

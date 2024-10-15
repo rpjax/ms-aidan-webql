@@ -63,16 +63,3 @@ public class ParameterSymbol : IParameterSymbol
     }
 
 }
-
-public class AccumulatorSymbol : ITypedSymbol
-{
-    public string Identifier { get; }
-    public Type Type { get; }
-
-    public AccumulatorSymbol(string identifier, Type type)
-    {
-        Identifier = identifier;
-        Type = type;
-    }
-
-}

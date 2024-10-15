@@ -1,6 +1,5 @@
 ﻿using Aidan.Core;
 using Webql.Core.Linq;
-using Webql.Parsing.Ast;
 
 namespace Webql.Core;
 
@@ -40,13 +39,4 @@ public class WebqlCompilationContext
     /// </summary>
     public IWebqlLinqProvider LinqProvider => Settings.LinqProvider;
 
-    /// <summary>
-    /// Gets the queryable type for the specified Webql syntax node.
-    /// </summary>
-    /// <param name="node">The Webql syntax node.</param>
-    /// <returns>The queryable type.</returns>
-    public Type GetQueryableType(WebqlSyntaxNode node)
-    {
-        return LinqProvider.GetQueryableType(node);
-    }
 }

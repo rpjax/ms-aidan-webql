@@ -1,5 +1,4 @@
-﻿
-namespace Webql.Parsing.Ast;
+﻿namespace Webql.Parsing.Ast;
 
 /// <summary>
 /// Represents the type of a WebQL expression.

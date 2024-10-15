@@ -20,7 +20,7 @@ public class ImplicitTypeConversionRewriter : SyntaxTreeRewriter
         var lhsSemantics = lhs.GetSemantics<IExpressionSemantics>();
         var rhsSemantics = rhs.GetSemantics<IExpressionSemantics>();
 
-        if (!SemanticsTypeHelper.TypesAreCompatible(lhsSemantics.Type, rhsSemantics.Type))
+        if (!TypeHelper.TypesAreCompatible(lhsSemantics.Type, rhsSemantics.Type))
         {
             return base.VisitOperationExpression(node);
         }

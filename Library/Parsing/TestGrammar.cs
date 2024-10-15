@@ -4,9 +4,9 @@ using Aidan.TextAnalysis.Tokenization;
 
 namespace Aidan.Webql.Analysis.DocumentSyntax.Parsing;
 
-public class WebqlGrammar : Grammar
+public class TestGrammar : Grammar
 {
-    public WebqlGrammar() : base(productions: GetProductions(), start: GetStart())
+    public TestGrammar() : base(productions: GetProductions(), start: GetStart())
     {
     }
 

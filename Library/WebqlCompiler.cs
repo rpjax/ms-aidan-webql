@@ -27,6 +27,7 @@ public class WebqlCompiler
     /// Compiles the specified webql query into an expression.
     /// </summary>
     /// <param name="query">The Webql query.</param>
+    /// <param name="elementType">The type of the elements in the collection.</param>
     /// <returns>The compiled expression.</returns>
     public LambdaExpression Compile(string query, Type elementType)
     {

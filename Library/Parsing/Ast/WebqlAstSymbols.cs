@@ -8,10 +8,10 @@ public static class WebqlAstSymbols
     /// <summary>
     /// Represents the identifier for the source.
     /// </summary>
-    public const string SourceIdentifier = "<source>";
+    public static string SourceIdentifier { get; } = "<source>";
 
     /// <summary>
     /// Represents the identifier for an element.
     /// </summary>
-    public const string ElementIdentifier = "<element>";
+    public static string ElementIdentifier { get; } = "<element>";
 }

@@ -4,7 +4,7 @@ using Webql.Parsing.Ast;
 namespace Webql.Core.Linq;
 
 /// <summary>
-/// Represents a provider for generating LINQ expressions based on Webql expressions.
+/// Represents a provider for LINQ methods.
 /// </summary>
 public interface IWebqlLinqProvider
 {

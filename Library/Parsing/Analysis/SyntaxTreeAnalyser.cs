@@ -145,11 +145,19 @@ public class SyntaxTreeAnalyzer : SyntaxTreeVisitor
         }
     }
 
+    /// <summary>
+    /// Analyzes the given type conversion expression.
+    /// </summary>
+    /// <param name="expression">The type conversion expression to analyze.</param>
     protected virtual void AnalyzeTypeConversionExpression(WebqlTypeConversionExpression expression)
     {
         Analyze(expression.Expression);
     }
 
+    /// <summary>
+    /// Analyzes the given anonymous object expression.
+    /// </summary>
+    /// <param name="expression">The anonymous object expression to analyze.</param>
     protected virtual void AnalyzeAnonymousObjectExpression(WebqlAnonymousObjectExpression expression)
     {
         foreach (var property in expression.Properties)
@@ -158,9 +166,12 @@ public class SyntaxTreeAnalyzer : SyntaxTreeVisitor
         }
     }
 
+    /// <summary>
+    /// Analyzes the given anonymous object property.
+    /// </summary>
+    /// <param name="property">The anonymous object property to analyze.</param>
     protected virtual void AnalyzeAnonymousObjectProperty(WebqlAnonymousObjectProperty property)
     {
         Analyze(property.Value);
     }
-
 }
